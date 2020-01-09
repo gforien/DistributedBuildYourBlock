@@ -20,4 +20,6 @@ socket.on('connect', () => {
       socket.close();
     });
   });
+
+  socket.emit('keys', (value) => { console.log(value) });
 });
