@@ -1,4 +1,5 @@
 {
   "name": "Fichier de configuration 1",
-  "message": "Je suis l'unique !"
+  "message": "Je suis l'unique !",
+  "port": 3000
 }
