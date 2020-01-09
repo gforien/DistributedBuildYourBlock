@@ -17,15 +17,24 @@ console.log("config", config);
 const PORT = config.port;
 
 const Server = require('socket.io');
+const Client = require('socket.io-client');
 const io = new Server(PORT, {
   path: '/dbyb',
   serveClient: false,
 });
-
 console.log(`Serveur lancé sur le port ${PORT}.`);
 
-const db = Object.create(null);
+/* le serveur se synchronise aux autres serveurs */
+const srvs = config.autres.map((element, index) => {
+    var s = Client(`http://localhost:${element}`, {path: '/dbyb'});
+    s.on('connect', () => {
+      console.log('Connection établie avec le serveur '+element);
+      console.log(srvs);
+    });
+    return s;
+});
 
+const db = Object.create(null);
 io.on('connect', (socket) => {
   console.log('Nouvelle connexion');
 
@@ -37,12 +46,22 @@ io.on('connect', (socket) => {
   socket.on('set', function(field, value, callback){
     if (field in db) {
       console.log(`set error : Field ${field} exists.`);
-      db[field] = value;
-      callback(true);
+      // db[field] = value;
+      callback(false);
     } else {
       console.log(`set ${field} : ${value}`);
       db[field] = value;
       callback(true);
+
+      // synchronise
+      srvs.forEach((s) => {
+        s.emit('setServ', field, value);
+      });
     }
+  });
+
+  socket.on('setServ', function(field, value){
+    console.log(`SETSERV ${field} : ${value}`);
+    db[field] = value;
   });
 });
