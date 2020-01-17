@@ -1,6 +1,6 @@
 {
   "name": "Fichier de configuration 2",
   "message": "Nop...",
-  "port": 3001,
-  "autres" : [3000]
+  "port": 3002,
+  "autres" : [3001]
 }
