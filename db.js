@@ -29,7 +29,7 @@ const srvs = config.autres.map((element, index) => {
     var s = Client(`http://localhost:${element}`, {path: '/dbyb'});
     s.on('connect', () => {
       console.log('Connection établie avec le serveur '+element);
-      console.log(srvs);
+      //console.log(srvs);
     });
     return s;
 });
